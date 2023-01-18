@@ -1,0 +1,80 @@
+<app-header></app-header>
+
+<div
+  class="empty-cart-message"
+  *ngIf="productsInCart.length == 0; else elseBlock"
+>
+  <h1>There are currently no items in your cart.</h1>
+</div>
+
+<ng-template #elseBlock>
+  <div class="cart-container">
+    <div class="cart-panel">
+      <div class="cart-item" *ngFor="let cartItem of productsInCart">
+        <img class="product-image" src="{{ cartItem.url }}" />
+        <div class="cart-item-details">
+          <p>
+            <strong>{{ cartItem.name }}</strong>
+          </p>
+          <p>${{ cartItem.price }}</p>
+          <div>
+            <label>Amount:</label>
+            <input
+              class="number-input"
+              type="number"
+              name="{{ cartItem.id }} "
+              value="{{ cartItem.quantity }}"
+              min="0"
+              [(ngModel)]="cartItem.quantity"
+              (ngModelChange)="updateCart(cartItem)"
+            />
+          </div>
+          <button class="cartRemoveButton" (click)="removeFromCart(cartItem)">
+            Remove from cart
+          </button>
+        </div>
+      </div>
+      <form>
+        <h1 id="totalPrice">Total: ${{ totalPrice.toFixed(2) }}</h1>
+      </form>
+    </div>
+
+    <div class="cart-panel">
+      <form class="form-margin" #form="ngForm" (ngSubmit)="onSubmitOrder()">
+        <p>Full Name</p>
+        <input
+          type="text"
+          name="fullName"
+          id="fullName"
+          required
+          minlength="5"
+          [(ngModel)]="fullName"
+        />
+        <p>Address</p>
+        <input
+          type="text"
+          name="address"
+          id="address"
+          required
+          minlength="10"
+          [(ngModel)]="address"
+        />
+        <p>Credit Card Number</p>
+        <input
+          type="text"
+          name="ccNum"
+          id="ccNum"
+          required
+          minlength="16"
+          maxlength="16"
+          inputmode="numeric"
+          pattern="^[0-9]*$"
+          [(ngModel)]="ccNum"
+        />
+        <br />
+
+        <button [disabled]="form.invalid">Submit order</button>
+      </form>
+    </div>
+  </div>
+</ng-template>
